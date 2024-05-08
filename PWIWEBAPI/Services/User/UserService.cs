@@ -7,9 +7,28 @@ namespace PWIWEBAPI.Services.User
 	{
 		private readonly AppDbContext _context;
 		public UserService(AppDbContext context) => _context = context;
-		public Task<ServiceResModel<List<UserModel>>> CreateUsers(UserModel newUser)
+		public async Task<ServiceResModel<UserModel>> CreateUsers(UserModel newUser)
 		{
-			throw new NotImplementedException();
+			ServiceResModel<UserModel> serviceRes = new ServiceResModel<UserModel>();
+			try
+			{
+				if (newUser == null)
+				{
+					serviceRes.Error = true;
+					serviceRes.Message = "Data null";
+					return serviceRes;
+				}
+
+				_context.Add(newUser);
+				await _context.SaveChangesAsync();
+				serviceRes.Data = newUser;
+			}
+			catch (Exception ex)
+			{
+				serviceRes.Error = true;
+				serviceRes.Message = "Erros=>" + ex;
+			}
+			return serviceRes;
 		}
 
 		public Task<ServiceResModel<List<UserModel>>> DeletUsers(int id)
@@ -29,7 +48,7 @@ namespace PWIWEBAPI.Services.User
 			catch (Exception ex)
 			{
 				serviceRes.Error = true;
-				serviceRes.Message = "Erros=>"+ex;
+				serviceRes.Message = "Erros=>" + ex;
 			}
 			return serviceRes;
 		}

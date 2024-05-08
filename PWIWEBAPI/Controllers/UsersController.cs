@@ -19,5 +19,33 @@ namespace PWIWEBAPI.Controllers
 			return Ok(await _iusers.GetAllUsers());
 
 		}
+
+		//[HttpGet]
+		//public async Task<ActionResult<ServiceResModel<UserModel>>> GetUsersById()
+		//{
+		//	return Ok("GetUsersById");
+
+		//}
+
+		[HttpPost]
+		public async Task<ActionResult<ServiceResModel<UserModel>>> CreateUsers(UserModel userModel)
+		{
+			return Ok(await _iusers.CreateUsers(userModel));
+
+		}
+
+		//[HttpPut]
+		//public async Task<ActionResult<ServiceResModel<UserModel>>> UpdateUsers()
+		//{
+		//	return Ok("UpdateUsers");
+
+		//}
+		//[HttpDelete]
+		//public async Task<ActionResult<ServiceResModel<UserModel>>> DeletUsers()
+		//{
+		//	return Ok("DeletUsers");
+
+		//}
+
 	}
 }
