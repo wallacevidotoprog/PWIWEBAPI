@@ -28,6 +28,7 @@ namespace PWIWEBAPI.Migrations
                     Password = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TypeUser = table.Column<int>(type: "int", nullable: false),
+                    Live = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Updates = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Create = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },

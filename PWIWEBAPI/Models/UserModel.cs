@@ -14,7 +14,7 @@ namespace PWIWEBAPI.Models
 		public string? Email { get; set; }
 		public string? Password { get; set; }
         public EnumUsers TypeUser { get; set; }
-
+		public bool Live { get; set; } = true;
         public DateTime Updates { get; set; } = DateTime.Now.ToLocalTime();
         public DateTime Create { get; set; } = DateTime.Now.ToLocalTime();
 
