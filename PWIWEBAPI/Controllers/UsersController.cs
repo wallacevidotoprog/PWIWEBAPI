@@ -13,39 +13,40 @@ namespace PWIWEBAPI.Controllers
 		private readonly IUser _iusers;
         public UsersController(IUser iusers)=> _iusers = iusers;
 
-        [HttpGet]
+        [HttpGet("GetAllUsers")]
 		public async Task<ActionResult<ServiceResModel<List<UserModel>>>> GetAllUsers()
 		{
 			return Ok(await _iusers.GetAllUsers());
 
 		}
 
-		//[HttpGet]
-		//public async Task<ActionResult<ServiceResModel<UserModel>>> GetUsersById()
-		//{
-		//	return Ok("GetUsersById");
+		[HttpGet("GetUsersById{id}")]
+		public async Task<ActionResult<ServiceResModel<UserModel>>> GetUsersById(int id)
+		{
+			return Ok(await _iusers.GetUsersById(id));
 
-		//}
+		}
 
-		[HttpPost]
+		[HttpPost("CreateUsers")]
 		public async Task<ActionResult<ServiceResModel<UserModel>>> CreateUsers(UserModel userModel)
 		{
 			return Ok(await _iusers.CreateUsers(userModel));
 
 		}
+		[HttpPut("inativeUser{id}")]
+		public async Task<ActionResult<ServiceResModel<UserModel>>> DeletUsers(int id)
+		{
+			return Ok(await _iusers.DeletUsers(id));
 
-		//[HttpPut]
-		//public async Task<ActionResult<ServiceResModel<UserModel>>> UpdateUsers()
-		//{
-		//	return Ok("UpdateUsers");
+		}
+		[HttpPut("UpdateUsers")]
+		public async Task<ActionResult<ServiceResModel<UserModel>>> UpdateUsers(UserModel upUser)
+		{
+			return Ok(await _iusers.UpdateUsers(upUser));
 
-		//}
-		//[HttpDelete]
-		//public async Task<ActionResult<ServiceResModel<UserModel>>> DeletUsers()
-		//{
-		//	return Ok("DeletUsers");
+		}
 
-		//}
+
 
 	}
 }

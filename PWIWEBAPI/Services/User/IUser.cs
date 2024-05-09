@@ -8,7 +8,7 @@ namespace PWIWEBAPI.Services.User
 		Task<ServiceResModel<UserModel>> CreateUsers(UserModel newUser);
 		Task<ServiceResModel<UserModel>> GetUsersById(int id);
 		Task<ServiceResModel<UserModel>> UpdateUsers(UserModel upUser);
-		Task<ServiceResModel<List<UserModel>>> DeletUsers(int id);
+		Task<ServiceResModel<UserModel>> DeletUsers(int id);
 
 	}
 }
