@@ -10,14 +10,11 @@ namespace PWIWEBAPI.Controllers
 	{
 		private readonly IGlinkd _glinkd;
 
-		public GlinkdController(IGlinkd glinkdService)
-		{
-			_glinkd = glinkdService;
+		public GlinkdController(IGlinkd glinkdService)=> _glinkd = glinkdService;
 
-		}
 
 		[HttpGet]
-		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetGlinkd()=> await _glinkd.GetGlinkd();
+		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetGlinkd() => await _glinkd.GetGlinkd();
 
 		[HttpPost]
 		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> WriteGlinkd(List<GamesysModel> gamesysModels)

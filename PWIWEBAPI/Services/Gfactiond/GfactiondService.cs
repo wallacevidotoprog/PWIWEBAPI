@@ -26,9 +26,9 @@ namespace PWIWEBAPI.Services.Gfactiond
 			return tempRes;
 		}
 
-		public Task<ActionResult<ServiceResModel<List<string>>>> GetGfactiondFilter()
+		public async Task<ActionResult<ServiceResModel<List<ListModel>>>> GetGfactiondFilter()
 		{
-			ServiceResModel<List<string>> tempRes = new ServiceResModel<List<string>>();
+			ServiceResModel<List<ListModel>> tempRes = new ServiceResModel<List<ListModel>>();
 			try
 			{
 				tempRes.Data = DatasPw.DataGfactiondFilter;
@@ -88,29 +88,29 @@ namespace PWIWEBAPI.Services.Gfactiond
 			return tempRes;
 		}
 
-		public Task<ActionResult<ServiceResModel<List<bool>>>> WriteGfactiondFilter(ActionData<List<string>> filters)
+		public async Task<ActionResult<ServiceResModel<List<string>>>> WriteGfactiondFilter(ActionData<List<string>> filters)
 		{
 
 			ServiceResModel<List<bool>> tempRes = new ServiceResModel<List<bool>>();
 			try
 			{
-				for (int i = 0; i < filters.Data.Count; i++)
-				{
-					switch (filters.Action)
-					{
-						case Actions.INSERT:
+				//for (int i = 0; i < filters.Data.Count; i++)
+				//{
+				//	switch (filters.Action)
+				//	{
+				//		case Actions.INSERT:
 
-							DatasPw.DataGfactiondFilter.Add(filters.Data[i]);
-							break;
-						case Actions.UPDATE:
-							break;
-						case Actions.DELETE:
-							DatasPw.DataGfactiondFilter.Remove(filters.Data[i]);
-							break;
-						default:
-							break;
-					}
-				}
+				//			DatasPw.DataGfactiondFilter.Add(filters.Data[i]);
+				//			break;
+				//		case Actions.UPDATE:
+				//			break;
+				//		case Actions.DELETE:
+				//			DatasPw.DataGfactiondFilter.Remove(filters.Data[i]);
+				//			break;
+				//		default:
+				//			break;
+				//	}
+				//}
 
 				DatasPw.WriteGfactiondFilter();
 
@@ -124,11 +124,9 @@ namespace PWIWEBAPI.Services.Gfactiond
 				tempRes.Message = ex.Message;
 			}
            
-           
-
-
-			return tempRes;
+			return null;
 		}
+
 	}
 
 }

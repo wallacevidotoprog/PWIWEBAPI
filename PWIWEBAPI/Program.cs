@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PWIWEBAPI.DataContext;
 using PWIWEBAPI.Logger;
+using PWIWEBAPI.Services.Gamed;
 using PWIWEBAPI.Services.Gfactiond;
 using PWIWEBAPI.Services.Glinkd;
 using PWIWEBAPI.Services.User;
@@ -17,6 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUser, UserService>();
 builder.Services.AddScoped<IGlinkd, GlinkdService>();
 builder.Services.AddScoped<IGfactiond, GfactiondService>();
+builder.Services.AddScoped<IGamed, GamedService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
