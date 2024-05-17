@@ -12,7 +12,7 @@ namespace PWIWEBAPI.Services.Gfactiond
 			ServiceResModel<List<GamesysModel>> tempRes = new ServiceResModel<List<GamesysModel>>();
 			try
 			{
-				//tempRes.Data = DatasPw.DataGfactiondGamesys;
+				tempRes.Data = (List<GamesysModel>?)DatasPw.listPwData[1].DATA;
 
 				tempRes.Error = false;
 				tempRes.Message = "Sucess";
@@ -31,7 +31,7 @@ namespace PWIWEBAPI.Services.Gfactiond
 			ServiceResModel<List<ListModel>> tempRes = new ServiceResModel<List<ListModel>>();
 			try
 			{
-				//tempRes.Data = DatasPw.DataGfactiondFilter;
+				tempRes.Data = (List<ListModel>?)DatasPw.listPwData[4].DATA;
 
 				tempRes.Error = false;
 				tempRes.Message = "Sucess";
@@ -72,7 +72,7 @@ namespace PWIWEBAPI.Services.Gfactiond
 				//	}
 				//}
 
-				//DatasPw.WriteGfactiondGamesys();
+				DatasPw.listPwData[1].Write();
 				tempRes.Error = false;
 				tempRes.Message = "Sucesse";
 				tempRes.Data = null;
@@ -112,7 +112,7 @@ namespace PWIWEBAPI.Services.Gfactiond
 				//	}
 				//}
 
-				//DatasPw.WriteGfactiondFilter();
+				DatasPw.listPwData[4].Write();
 
 				tempRes.Error = false;
 				tempRes.Message = "Sucess";

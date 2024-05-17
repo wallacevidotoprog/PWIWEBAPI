@@ -12,7 +12,7 @@ namespace PWIWEBAPI.Services.Gamed
 			ServiceResModel<List<GamesysModel>> tempRes = new ServiceResModel<List<GamesysModel>>();
 			try
 			{
-				//tempRes.Data = DatasPw.DataGmServer;
+				tempRes.Data = (List<GamesysModel>?)DatasPw.listPwData[2].DATA;
 
 				tempRes.Error = false;
 				tempRes.Message = "Sucess";
@@ -31,7 +31,7 @@ namespace PWIWEBAPI.Services.Gamed
 			ServiceResModel<List<GamesysModel>> tempRes = new ServiceResModel<List<GamesysModel>>();
 			try
 			{
-				//tempRes.Data = DatasPw.DataGsalia;
+				tempRes.Data = (List<GamesysModel>?)DatasPw.listPwData[3].DATA;
 
 				tempRes.Error = false;
 				tempRes.Message = "Sucess";
@@ -72,7 +72,7 @@ namespace PWIWEBAPI.Services.Gamed
 				//	}
 				//}
 
-				//DatasPw.WriteGmServer();
+				DatasPw.listPwData[2].Write();
 				tempRes.Error = false;
 				tempRes.Message = "Sucesse";
 				tempRes.Data = null;
@@ -129,9 +129,9 @@ namespace PWIWEBAPI.Services.Gamed
 				//			}
 				//		}
 				//	}
-				//}
+				//}3
 
-				//DatasPw.WriteGsalias();
+				DatasPw.listPwData[3].Write();
 				tempRes.Error = false;
 				tempRes.Message = "Sucesse";
 				tempRes.Data = null;

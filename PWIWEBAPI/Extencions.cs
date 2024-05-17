@@ -5,7 +5,7 @@ namespace PWIWEBAPI
 	public static class Extencions
 	{
 
-		public static object addItemArray(this object[] obj, string newItem)
+		public static object addItemArrays(this object[] obj, string newItem)
 		{
 			object[] newArr = new object[obj.Length + 1];
 
@@ -17,14 +17,10 @@ namespace PWIWEBAPI
 
 			return newArr;
 		}
-		public static string[] addItensArray(this string[] obj, string newItem)
+		public static object addItensArray(object[] obj, object newItem)
 		{
-			string[] tempO = newItem.Split(';');
-
-			//object temp = obj.Union(tempO).ToArray();
-			string[] arr = obj.Concat(tempO).ToArray();
-			//var arr2 = Combine(obj, tempO);
-
+			object[] tempO = newItem.ToString().Split(";").Cast<object>().ToArray();	
+			object[] arr = obj.Concat(tempO).ToArray();
 			return arr;
 		}
 		public static string[] removeItensArray(this string[] obj, string newItem)

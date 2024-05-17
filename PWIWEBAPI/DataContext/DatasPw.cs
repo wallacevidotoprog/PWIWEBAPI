@@ -3,6 +3,7 @@ using PWIWEBAPI.Models;
 using PWIWEBAPI.Services.Glinkd;
 using System.Diagnostics.SymbolStore;
 using System.Linq;
+using System.Net;
 using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -73,7 +74,7 @@ namespace PWIWEBAPI.DataContext
 								{
 									if (line != "")
 									{
-										string[] temps = line.Split('=');
+										string[] temps = line.Trim().Split('=');
 
 										if (gamesysModels[it].Types == null)
 										{
@@ -81,23 +82,62 @@ namespace PWIWEBAPI.DataContext
 										}
 
 										object tempValue = null;
-										string tempSplit = null;
 
-										if (temps[1].Contains(";"))
+
+										if (temps[1].ToString().StartsWith("{"))
 										{
-											tempValue = temps[1].Replace(" ", null).Split(";").Where(x => x != "").Cast<object>().ToArray();
-											tempSplit = ";";
+											string xr = temps[1].ToString().Trim();
+											string ins = "\t"; 
+
+											if (xr.Contains("},{"))
+											{
+												ins = "\t,\t";
+												xr = xr.Replace(",{", "{");
+											}
+
+											var ry = xr.Replace("{", "").Split("}").Cast<object>().ToArray();
+
+											ry = ry.Where(x => (x != ",")&&(x != "")).Cast<object>().ToArray();
+
+
+											tempValue = new InterString { StartString = "{", JoinString = ins, EndString = "}", Value = ry};
+											
 										}
-										else if (temps[1].Contains(";"))
+										else if (temps[1].ToString().StartsWith("("))
 										{
-											tempValue = temps[1].Replace(" ", null).Split(",").Where(x => x != "").Cast<object>().ToArray();
-											tempSplit = ",";
+											string xr = temps[1].ToString().Trim();
+											string ins = "\t";
+
+											if (xr.Contains("),("))
+											{
+												ins = "\t,\t";
+												xr = xr.Replace(",(", "(");
+											}
+
+											object[] ry = xr.Replace("(", "").Split(")").Cast<object>().ToArray();
+
+											ry = ry.Where(x => (x != ",") && (x != "")).Cast<object>().ToArray();
+
+
+											tempValue = new InterString { StartString = "(", JoinString = ins, EndString = ")", Value = ry };
+										}
+										else if (temps[1].Contains(";") && (!temps[1].Contains("(") && !temps[1].Contains("{")))
+										{
+											object ob = temps[1].Replace(" ", null).Split(";").Where(x => x != "").Cast<object>().ToArray();
+											tempValue = new InterString {JoinString = ";" , Value = ob };
+										}
+										else if (temps[1].Contains(",") && (!temps[1].Contains("(") && !temps[1].Contains("{")))
+										{
+											object ob = temps[1].Replace(" ", null).Split(",").Where(x => x != "").Cast<object>().ToArray();
+											tempValue = new InterString { JoinString = ",", Value = ob };
 										}
 										else
 										{
-											tempValue = temps[1];
+											tempValue = new InterString { Value = (object)temps[1] } ;
 										}
-										gamesysModels[it].Types.Add(new Types { Key = temps[0], KeyIndex = xt, Value = tempValue, KeySpritValue = tempSplit });
+
+
+										gamesysModels[it].Types.Add(new Types { Key = temps[0], KeyIndex = xt, Value = tempValue });
 										xt++;
 										gamesysModels[it].OnInit();
 
@@ -122,7 +162,17 @@ namespace PWIWEBAPI.DataContext
 
 		public static void WriteGamesysModel(List<GamesysModel> gamesysModels, string file)
 		{
-			if (file != "")
+			bool typesSet = false;
+			for (int i = 0; i < gamesysModels.Count; i++)
+			{
+				if (gamesysModels[i].OnTypes())
+				{
+					typesSet = true;
+					break;
+				}
+
+			}
+			if (file != "" && !typesSet)
 			{
 				string _NAME = file.Split("\\")[file.Split("\\").Length - 2].ToUpper();
 				string _FILE = file.Split("\\")[file.Split("\\").Length - 1].Replace((new FileInfo(file)).Extension, null).ToUpper();
@@ -132,31 +182,38 @@ namespace PWIWEBAPI.DataContext
 					if (gamesysModels != null)
 					{
 						Loggers.LogWriteLog(TypeLog.INFO, TypeActionLog.WRITE, TypePostionLog.INIT, _NAME, _FILE);
+						string tempwriter = null;
+						for (int i = 0; i < gamesysModels.Count; i++)
+						{
+							tempwriter += ($"{(i > 0 ? "\n" : "")}[{gamesysModels[i].Title}]\n");
+							for (int x = 0; x < gamesysModels[i].Types.Count; x++)
+							{
+								var tp = gamesysModels[i].Types[x];
+
+								if (((InterString)tp.Value).Value.GetType() == typeof(object[]))
+								{
+									var xs = (object[])((InterString)tp.Value).Value;
+
+                                    for (int j = 0; j < xs.Length; j++)
+                                    {
+										xs[j] = $"{((InterString)tp.Value).StartString}{xs[j]}{((InterString)tp.Value).EndString}";
+
+									}
+                                    var tpValue = string.Join(((InterString)tp.Value).JoinString, xs) ;
+
+									tempwriter += ($"{Extencions.PadRight(tp.Key, tp.Key.Length > 25 ? tp.Key.Length : 25)}=\t\t\t{tpValue}\n");
+								}
+								else
+								{
+									var xtx = (InterString)tp.Value;
+									tempwriter += ($"{Extencions.PadRight(tp.Key, tp.Key.Length > 25 ? tp.Key.Length : 25)}=\t\t\t{xtx.Value}\n");
+								}
+							}
+						}
 
 						using (StreamWriter writer = new StreamWriter(file, false))
 						{
-                            for (int i = 0; i < gamesysModels.Count; i++)
-                            {
-								writer.WriteLine($"[{gamesysModels[i].Title}]");
-								for (int x = 0; x < gamesysModels[i].Types.Count; x++)
-								{
-									var tp = gamesysModels[i].Types[x];
-									if (tp.Value.GetType() == typeof(object[]))
-									{
-										string temp = string.Join(tp.KeySpritValue, (string[])tp.Value);
-
-										writer.WriteLine($"{Extencions.PadRight(tp.Key, tp.Key.Length > 25 ? tp.Key.Length : 25)}=\t\t\t{tp.Value}");
-									}
-									else
-									{
-										writer.WriteLine($"{Extencions.PadRight(tp.Key, tp.Key.Length > 25 ? tp.Key.Length : 25)}=\t\t\t{tp.Value}");
-									}
-								}
-								if (i-1 != gamesysModels.Count)
-								{
-									writer.WriteLine($"\n");
-								}
-							}
+							writer.Write(tempwriter);
 							writer.Close();
 						}
 

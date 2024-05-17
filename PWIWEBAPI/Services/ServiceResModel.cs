@@ -8,16 +8,21 @@ namespace PWIWEBAPI.Services
 		public bool Error { get; set; }
 		public string? Message { get; set; }
 	}
-	public class ActionData<T>
+	public class ActionData<DataMod>
 	{
-		public T? Data { get; set; }
-		public Actions Action { get; set; }
+		public DataMod? Data { get; set; }
+		public Actions? Action { get; set; }
+	}
+	public class DataMod
+	{
+        public int Id_tile { get; set; }
+		public int Id_key { get; set; }
+		public object? Values { get; set; }
 	}
 	public enum Actions
 	{
 		INSERT,
 		UPDATE,
 		DELETE
-
 	}
 }
