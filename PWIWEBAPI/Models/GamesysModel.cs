@@ -26,7 +26,7 @@ namespace PWIWEBAPI.Models
 	}
 	public class Types
 	{
-		public int? KeyIndex { get; private set; }
+		public int? KeyIndex { get; set; }
 		public string? Key { get; set; }
 		public object? Value { get; set; }
 		public object? IndexValue { get; set; }

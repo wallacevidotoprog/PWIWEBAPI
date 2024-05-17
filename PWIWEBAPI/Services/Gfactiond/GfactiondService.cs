@@ -12,7 +12,7 @@ namespace PWIWEBAPI.Services.Gfactiond
 			ServiceResModel<List<GamesysModel>> tempRes = new ServiceResModel<List<GamesysModel>>();
 			try
 			{
-				tempRes.Data = DatasPw.DataGfactiondGamesys;
+				//tempRes.Data = DatasPw.DataGfactiondGamesys;
 
 				tempRes.Error = false;
 				tempRes.Message = "Sucess";
@@ -31,7 +31,7 @@ namespace PWIWEBAPI.Services.Gfactiond
 			ServiceResModel<List<ListModel>> tempRes = new ServiceResModel<List<ListModel>>();
 			try
 			{
-				tempRes.Data = DatasPw.DataGfactiondFilter;
+				//tempRes.Data = DatasPw.DataGfactiondFilter;
 
 				tempRes.Error = false;
 				tempRes.Message = "Sucess";
@@ -50,29 +50,29 @@ namespace PWIWEBAPI.Services.Gfactiond
 			ServiceResModel<List<GamesysModel>> tempRes = new ServiceResModel<List<GamesysModel>>();
 			try
 			{
-				for (int i = 0; i < gamesysModels.Count; i++)
-				{
-					for (int y = 0; y < DatasPw.DataGfactiondGamesys.Count; y++)
-					{
+				//for (int i = 0; i < gamesysModels.Count; i++)
+				//{
+				//	for (int y = 0; y < DatasPw.DataGfactiondGamesys.Count; y++)
+				//	{
 
-						if (DatasPw.DataGfactiondGamesys[y].Title == gamesysModels[i].Title)
-						{
-							for (int x = 0; x < DatasPw.DataGfactiondGamesys[y].Types.Count; x++)
-							{
-								for (int x1 = 0; x1 < gamesysModels[i].Types.Count; x1++)
-								{
-									if (DatasPw.DataGfactiondGamesys[y].Types[x].Key == gamesysModels[i].Types[x1].Key)
-									{
-										DatasPw.DataGfactiondGamesys[y].Types[x].Value = gamesysModels[i].Types[x1].Value;
-									}
-								}
+				//		if (DatasPw.DataGfactiondGamesys[y].Title == gamesysModels[i].Title)
+				//		{
+				//			for (int x = 0; x < DatasPw.DataGfactiondGamesys[y].Types.Count; x++)
+				//			{
+				//				for (int x1 = 0; x1 < gamesysModels[i].Types.Count; x1++)
+				//				{
+				//					if (DatasPw.DataGfactiondGamesys[y].Types[x].Key == gamesysModels[i].Types[x1].Key)
+				//					{
+				//						DatasPw.DataGfactiondGamesys[y].Types[x].Value = gamesysModels[i].Types[x1].Value;
+				//					}
+				//				}
 
-							}
-						}
-					}
-				}
+				//			}
+				//		}
+				//	}
+				//}
 
-				DatasPw.WriteGfactiondGamesys();
+				//DatasPw.WriteGfactiondGamesys();
 				tempRes.Error = false;
 				tempRes.Message = "Sucesse";
 				tempRes.Data = null;
@@ -112,7 +112,7 @@ namespace PWIWEBAPI.Services.Gfactiond
 				//	}
 				//}
 
-				DatasPw.WriteGfactiondFilter();
+				//DatasPw.WriteGfactiondFilter();
 
 				tempRes.Error = false;
 				tempRes.Message = "Sucess";
