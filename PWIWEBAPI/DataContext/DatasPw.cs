@@ -196,7 +196,7 @@ namespace PWIWEBAPI.DataContext
 
                                     for (int j = 0; j < xs.Length; j++)
                                     {
-										xs[j] = $"{((InterString)tp.Value).StartString}{xs[j]}{((InterString)tp.Value).EndString}";
+										tempwriter = $"{((InterString)tp.Value).StartString}{xs[j]}{((InterString)tp.Value).EndString}";
 
 									}
                                     var tpValue = string.Join(((InterString)tp.Value).JoinString, xs) ;
@@ -265,7 +265,7 @@ namespace PWIWEBAPI.DataContext
 				}
 				catch (Exception ex)
 				{
-					Loggers.LogWriteLog(TypeLog.INFO, TypeActionLog.READ, TypePostionLog.ERROR, _NAME, _FILE, ex.Message);
+					Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.READ, TypePostionLog.ERROR, _NAME, _FILE, ex.Message);
 					data = null;
 				}
 				return data;
@@ -284,13 +284,16 @@ namespace PWIWEBAPI.DataContext
 					if (listModels != null)
 					{
 						Loggers.LogWriteLog(TypeLog.INFO, TypeActionLog.WRITE, TypePostionLog.INIT, _NAME, _FILE);
+						string tempFile = null;
+
+						for (int i = 0; i < listModels.Count; i++)
+						{
+							tempFile+=($"{listModels[i]}\n");
+						}
 
 						using (StreamWriter writer = new StreamWriter(file, false))
 						{
-							for (int i = 0; i < listModels.Count; i++)
-							{
-								writer.WriteLine($"{listModels[i]}");
-							}
+							writer.Write(tempFile);
 							writer.Close();
 						}
 
@@ -304,7 +307,7 @@ namespace PWIWEBAPI.DataContext
 				}
 				catch (Exception ex)
 				{
-					Loggers.LogWriteLog(TypeLog.INFO, TypeActionLog.WRITE, TypePostionLog.ERROR, _NAME, _FILE, ex.Message);
+					Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.WRITE, TypePostionLog.ERROR, _NAME, _FILE, ex.Message);
 				}
 			}
 		}

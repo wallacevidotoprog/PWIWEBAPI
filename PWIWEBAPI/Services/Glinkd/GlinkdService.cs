@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using PWIWEBAPI.DataContext;
+using PWIWEBAPI.Logger;
 using PWIWEBAPI.Models;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Xml.Linq;
 namespace PWIWEBAPI.Services.Glinkd
 {
 	public class GlinkdService : IGlinkd
@@ -21,6 +26,7 @@ namespace PWIWEBAPI.Services.Glinkd
 				tempRes.Data = null;
 				tempRes.Error = false;
 				tempRes.Message = ex.Message;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GetGlinkd", "Exception", ex.Message);
 			}
 			return tempRes;
 		}
@@ -43,6 +49,7 @@ namespace PWIWEBAPI.Services.Glinkd
 				tempRes.Error = false;
 				tempRes.Message = ex.Message;
 				tempRes.Data = null;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "WriteGlinkd", "Exception", ex.Message);
 			}
 
 			return tempRes;
@@ -54,26 +61,19 @@ namespace PWIWEBAPI.Services.Glinkd
 			{
 				for (int i = 0; i < gamesysModels.Count; i++)
 				{
-					//var tep = (object[])gamesysModels[i]?.Data.Values;
-					if (gamesysModels[i].Data.Values.GetType() == typeof(object[]))
+					if (((JsonElement)gamesysModels[i].Data.Values).ValueKind.ToString() == "Array")
 					{
-						for (int x = 0; x < ((object[])gamesysModels[i].Data.Values).Length; x++)
-						{
 							((GamesysModel)((List<GamesysModel>)DatasPw.listPwData[0].DATA)[gamesysModels[i].Data.Id_tile])
-								.ActionValues(Actions.INSERT, gamesysModels[i].Data.Id_key, ((object[])gamesysModels[i].Data.Values));
-
-						}
+								.ActionValues((Actions)gamesysModels[i].Action, gamesysModels[i].Data.Id_key, JsonSerializer.Deserialize<object[]>(gamesysModels[i].Data.Values.ToString()).Select(x => x.ToString()).Cast<object>().ToArray());
+						
 					}
 					else
 					{
 						((List<GamesysModel>)DatasPw.listPwData[0].DATA)[gamesysModels[i].Data.Id_tile]
-								.ActionValues(Actions.INSERT, gamesysModels[i].Data.Id_key, gamesysModels[i].Data.Values);
+								.ActionValues((Actions)gamesysModels[i].Action, gamesysModels[i].Data.Id_key, gamesysModels[i].Data.Values) ;
 					}
 
 				}
-				//var x = ((List<GamesysModel>)DatasPw.listPwData[0].DATA)[gamesysModels];
-
-
 				tempRes.Error = false;
 				tempRes.Message = "Sucesse";
 				tempRes.Data = null;
@@ -81,9 +81,10 @@ namespace PWIWEBAPI.Services.Glinkd
 			catch (Exception ex)
 			{
 
-				tempRes.Error = false;
+				tempRes.Error = true;
 				tempRes.Message = ex.Message;
 				tempRes.Data = null;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "SetGlinkd", "Exception", ex.Message);
 			}
 
 			return tempRes;

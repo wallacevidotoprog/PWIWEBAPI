@@ -44,11 +44,13 @@ namespace PWIWEBAPI.Models
 				{
 					case Actions.INSERT:
 						((InterString)Types[ik].Value).Value = ((InterString)Types[ik].Value).Value.GetType() == typeof(object[])?
-							Extencions.addItensArray(((object[])((InterString)Types[ik].Value).Value), obj) : obj;
+							Extencions.addItensArray(((object[])((InterString)Types[ik].Value).Value), obj ) : obj;
 						break;
 					case Actions.UPDATE:
 						break;
 					case Actions.DELETE:
+						((InterString)Types[ik].Value).Value = ((InterString)Types[ik].Value).Value.GetType() == typeof(object[]) ?
+							Extencions.removeItensArray(((object[])((InterString)Types[ik].Value).Value), obj) : obj;
 						break;
 					default:
 						return false;
@@ -248,7 +250,7 @@ namespace PWIWEBAPI.Models
 	public class ListModel
 	{
 		public int Index { get; set; }
-		public string Value { get; set; }
+		public string Value { get; set; }		
 	}
 
 }

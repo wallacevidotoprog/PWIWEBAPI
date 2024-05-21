@@ -1,45 +1,48 @@
-﻿using static System.Reflection.Metadata.BlobBuilder;
+﻿using System.Linq;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace PWIWEBAPI
 {
 	public static class Extencions
 	{
-
-		public static object addItemArrays(this object[] obj, string newItem)
-		{
-			object[] newArr = new object[obj.Length + 1];
-
-			for (int i = 0; i < obj.Length; i++)
-			{
-				newArr[i] = obj[i];
-			}
-			newArr[newArr.Length - 1] = newItem;
-
-			return newArr;
-		}
 		public static object addItensArray(object[] obj, object newItem)
 		{
-			object[] tempO = newItem.ToString().Split(";").Cast<object>().ToArray();	
-			object[] arr = obj.Concat(tempO).ToArray();
+			object[] tempO = null;
+			if (newItem.GetType() == typeof(object[]))
+			{
+				tempO = newItem.ToString().Split(";").Cast<object>().ToArray();
+			}
+			else
+			{
+				tempO = newItem.ToString().Split().Cast<object>().ToArray();
+			}
+
+			object[] arr = obj.Concat(tempO).ToArray().Where(x => x != null).Cast<object>().ToArray();
 			return arr;
 		}
-		public static string[] removeItensArray(this string[] obj, string newItem)
+		public static object[] removeItensArray(object[] obj, object newItem)
 		{
-			string[] tempO = newItem.Split(';');
+			object[] tempO = null;
+			if (newItem.GetType() != typeof(object[]))
+			{
+				tempO = newItem.ToString().Split().Cast<object>().ToArray();
+			}
+			for (int i = 0; i < tempO.Length; i++)
+			{
 
-            for (int i = 0; i < tempO.Length; i++)
-            {
 				for (int x = 0; x < obj.Length; x++)
 				{
+					string xt = tempO[i].ToString();
+					string tx = obj[x].ToString();
 					if (obj[x].ToString() == tempO[i].ToString())
 					{
-						obj[x] = "";
+						obj[x] = null;
 					}
 				}
-            }
 
-			return obj.Where(x => x != "").ToArray();
-        }
+			}
+			return (object[])obj.Where(x => x != null).Cast<object>().ToArray();
+		}
 
 		public static string PadRight(string text, int totalWidth)
 		{

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PWIWEBAPI.DataContext;
+using PWIWEBAPI.Logger;
 using PWIWEBAPI.Models;
 using System.Linq;
 
@@ -7,9 +8,11 @@ namespace PWIWEBAPI.Services.Gfactiond
 {
 	public class GfactiondService : IGfactiond
 	{
+
+		ServiceResModel<List<GamesysModel>> tempRes;
 		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetGfactiond()
 		{
-			ServiceResModel<List<GamesysModel>> tempRes = new ServiceResModel<List<GamesysModel>>();
+			tempRes = new ServiceResModel<List<GamesysModel>>();
 			try
 			{
 				tempRes.Data = (List<GamesysModel>?)DatasPw.listPwData[1].DATA;
@@ -22,9 +25,75 @@ namespace PWIWEBAPI.Services.Gfactiond
 				tempRes.Data = null;
 				tempRes.Error = false;
 				tempRes.Message = ex.Message;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GetGfactiond", "Exception", ex.Message);
 			}
 			return tempRes;
 		}
+		public async Task<ActionResult<ServiceResModel<bool>>> WriteGfactiond()
+		{
+			var tempRes0 = new ServiceResModel<bool>();
+			try
+			{
+
+				DatasPw.listPwData[1].Write();
+				tempRes.Error = false;
+				tempRes.Message = "Sucesse";
+				tempRes.Data = null;
+			}
+			catch (Exception ex)
+			{
+
+				tempRes.Error = false;
+				tempRes.Message = ex.Message;
+				tempRes.Data = null;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "WriteGfactiond", "Exception", ex.Message);
+			}
+
+			return tempRes0;
+		}
+
+		public async Task<ActionResult<ServiceResModel<bool>>> SetGfactiond(ActionData<List<DataMod>> gamesysModels)
+		{
+			var tempRes0 = new ServiceResModel<bool>();
+			try
+			{
+				for (int i = 0; i < gamesysModels.Data.Count; i++)
+				{					
+					switch (gamesysModels.Action)
+					{
+						case Actions.INSERT:
+							
+							((List<ListModel>)DatasPw.listPwData[1].DATA).Add(new ListModel { Value = (string)gamesysModels.Data[i].Values });
+							break;
+						case Actions.DELETE:
+							for (int x = 0; x < ((List<ListModel>)DatasPw.listPwData[1].DATA).Count; x++)
+							{
+
+							}
+							break;
+						default:
+							break;
+					}
+				}
+
+				DatasPw.listPwData[1].Write();
+				tempRes.Error = false;
+				tempRes.Message = "Sucesse";
+				tempRes.Data = null;
+			}
+			catch (Exception ex)
+			{
+
+				tempRes.Error = false;
+				tempRes.Message = ex.Message;
+				tempRes.Data = null;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "SetGfactiond", "Exception", ex.Message);
+			}
+
+			return tempRes0;
+		}
+
+
 
 		public async Task<ActionResult<ServiceResModel<List<ListModel>>>> GetGfactiondFilter()
 		{
@@ -41,76 +110,17 @@ namespace PWIWEBAPI.Services.Gfactiond
 				tempRes.Data = null;
 				tempRes.Error = false;
 				tempRes.Message = ex.Message;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GetGfactiondFilter", "Exception", ex.Message);
 			}
 			return tempRes;
 		}
-
-		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> WriteGfactiond(List<GamesysModel> gamesysModels)
-		{
-			ServiceResModel<List<GamesysModel>> tempRes = new ServiceResModel<List<GamesysModel>>();
-			try
-			{
-				//for (int i = 0; i < gamesysModels.Count; i++)
-				//{
-				//	for (int y = 0; y < DatasPw.DataGfactiondGamesys.Count; y++)
-				//	{
-
-				//		if (DatasPw.DataGfactiondGamesys[y].Title == gamesysModels[i].Title)
-				//		{
-				//			for (int x = 0; x < DatasPw.DataGfactiondGamesys[y].Types.Count; x++)
-				//			{
-				//				for (int x1 = 0; x1 < gamesysModels[i].Types.Count; x1++)
-				//				{
-				//					if (DatasPw.DataGfactiondGamesys[y].Types[x].Key == gamesysModels[i].Types[x1].Key)
-				//					{
-				//						DatasPw.DataGfactiondGamesys[y].Types[x].Value = gamesysModels[i].Types[x1].Value;
-				//					}
-				//				}
-
-				//			}
-				//		}
-				//	}
-				//}
-
-				DatasPw.listPwData[1].Write();
-				tempRes.Error = false;
-				tempRes.Message = "Sucesse";
-				tempRes.Data = null;
-			}
-			catch (Exception ex)
-			{
-
-				tempRes.Error = false;
-				tempRes.Message = ex.Message;
-				tempRes.Data = null;
-			}
-
-			return tempRes;
-		}
-
-		public async Task<ActionResult<ServiceResModel<List<string>>>> WriteGfactiondFilter(ActionData<List<string>> filters)
+		public async Task<ActionResult<ServiceResModel<bool>>> WriteGfactiondFilter()
 		{
 
 			ServiceResModel<List<bool>> tempRes = new ServiceResModel<List<bool>>();
 			try
 			{
-				//for (int i = 0; i < filters.Data.Count; i++)
-				//{
-				//	switch (filters.Action)
-				//	{
-				//		case Actions.INSERT:
 
-				//			DatasPw.DataGfactiondFilter.Add(filters.Data[i]);
-				//			break;
-				//		case Actions.UPDATE:
-				//			break;
-				//		case Actions.DELETE:
-				//			DatasPw.DataGfactiondFilter.Remove(filters.Data[i]);
-				//			break;
-				//		default:
-				//			break;
-				//	}
-				//}
 
 				DatasPw.listPwData[4].Write();
 
@@ -122,9 +132,14 @@ namespace PWIWEBAPI.Services.Gfactiond
 				tempRes.Data = null;
 				tempRes.Error = false;
 				tempRes.Message = ex.Message;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "WriteGfactiondFilter", "Exception", ex.Message);
 			}
-           
+
 			return null;
+		}
+		public async Task<ActionResult<ServiceResModel<bool>>> SetGfactiondFilter(ActionData<List<DataMod>> filters)
+		{
+			throw new NotImplementedException();
 		}
 
 	}
