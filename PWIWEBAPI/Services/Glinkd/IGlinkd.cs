@@ -7,6 +7,6 @@ namespace PWIWEBAPI.Services.Glinkd
 	{
 		Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetGlinkd();
 		Task<ActionResult<ServiceResModel<List<GamesysModel>>>> WriteGlinkd();
-		Task<ActionResult<ServiceResModel<List<GamesysModel>>>> SetGlinkd(List<ActionData<DataMod>> gamesysModels);
+		Task<ActionResult<ServiceResModel<List<GamesysModel>>>> SetGlinkd(ActionData<DataMod> gamesysModels);
 	}
 }

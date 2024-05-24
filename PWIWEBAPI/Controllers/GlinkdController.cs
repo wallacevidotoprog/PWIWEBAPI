@@ -22,7 +22,7 @@ namespace PWIWEBAPI.Controllers
 			return await _glinkd.WriteGlinkd();
 		}
 		[HttpPut("uid")]
-		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> Glinkd([FromBody] List<ActionData<DataMod>> valuesModels)
+		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> Glinkd(ActionData<DataMod> valuesModels)
 		{
 			return await _glinkd.SetGlinkd(valuesModels);
 		}

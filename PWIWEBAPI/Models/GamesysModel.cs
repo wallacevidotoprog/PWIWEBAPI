@@ -43,10 +43,12 @@ namespace PWIWEBAPI.Models
 				switch (actions)
 				{
 					case Actions.INSERT:
-						((InterString)Types[ik].Value).Value = ((InterString)Types[ik].Value).Value.GetType() == typeof(object[])?
-							Extencions.addItensArray(((object[])((InterString)Types[ik].Value).Value), obj ) : obj;
+						((InterString)Types[ik].Value).Value = ((InterString)Types[ik].Value).Value.GetType() == typeof(object[]) ?
+							Extencions.addItensArray(((object[])((InterString)Types[ik].Value).Value), obj) : obj;
 						break;
 					case Actions.UPDATE:
+						((InterString)Types[ik].Value).Value = ((InterString)Types[ik].Value).Value.GetType() == typeof(object[]) ?
+							Extencions.addItensArray(((object[])((InterString)Types[ik].Value).Value), obj) : obj;
 						break;
 					case Actions.DELETE:
 						((InterString)Types[ik].Value).Value = ((InterString)Types[ik].Value).Value.GetType() == typeof(object[]) ?
@@ -60,7 +62,6 @@ namespace PWIWEBAPI.Models
 			}
 
 			return false;
-			//gamesysModels[it].Types.Add(new Types { Key = temps[0], KeyIndex = xt, Value = tempValue});
 		}
 
 
@@ -77,6 +78,9 @@ namespace PWIWEBAPI.Models
 
 			if (Value is not null)
 			{
+				#region OLD_F
+
+
 				//if (Value.GetType() == typeof(object[]))
 				//{
 				//	TypeValue = null;
@@ -157,9 +161,33 @@ namespace PWIWEBAPI.Models
 
 				//	}
 				//}
-				SetIndex();
+				#endregion
 
+				if (((InterString)Value).GetType() == typeof(object[]))
+				{
+					object[] array = (object[])Value;
+					for (int i = 0; i < ((object[])Value).Length; i++)
+					{
+						if (((InterString)((object[])Value)[i]).Value.ToString().Trim().EndsWith("f"))
+						{
+							((InterString)((object[])Value)[i]).Value = ((InterString)((object[])Value)[i]).Value.ToString().Replace("f", null);
+							((InterString)((object[])Value)[i]).EndString = "f";
+						}
+
+					}
+				}
+				else
+				{
+					if (((InterString)Value).Value.ToString().Trim().EndsWith("f"))
+					{
+						((InterString)(Value)).Value = ((InterString)Value).Value.ToString().Replace("f", null);
+						((InterString)Value).EndString = "f";
+					}
+				}
 			}
+
+
+			SetIndex();
 		}
 		private void SetIndex()
 		{
@@ -250,7 +278,7 @@ namespace PWIWEBAPI.Models
 	public class ListModel
 	{
 		public int Index { get; set; }
-		public string Value { get; set; }		
+		public object? Value { get; set; }
 	}
 
 }

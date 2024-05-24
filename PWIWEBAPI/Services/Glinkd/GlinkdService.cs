@@ -26,7 +26,7 @@ namespace PWIWEBAPI.Services.Glinkd
 				tempRes.Data = null;
 				tempRes.Error = false;
 				tempRes.Message = ex.Message;
-				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GetGlinkd", "Exception", ex.Message);
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GlinkdService", "GetGlinkd", ex.Message);
 			}
 			return tempRes;
 		}
@@ -49,31 +49,29 @@ namespace PWIWEBAPI.Services.Glinkd
 				tempRes.Error = false;
 				tempRes.Message = ex.Message;
 				tempRes.Data = null;
-				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "WriteGlinkd", "Exception", ex.Message);
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GlinkdService", "WriteGlinkd", ex.Message);
 			}
 
 			return tempRes;
 		}
-		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> SetGlinkd(List<ActionData<DataMod>> gamesysModels)
+		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> SetGlinkd(ActionData<DataMod> gamesysModels)
 		{
 			tempRes = new ServiceResModel<List<GamesysModel>>();
 			try
 			{
-				for (int i = 0; i < gamesysModels.Count; i++)
+				if (((JsonElement)gamesysModels.Data.Values).ValueKind.ToString() == "Array")
 				{
-					if (((JsonElement)gamesysModels[i].Data.Values).ValueKind.ToString() == "Array")
-					{
-							((GamesysModel)((List<GamesysModel>)DatasPw.listPwData[0].DATA)[gamesysModels[i].Data.Id_tile])
-								.ActionValues((Actions)gamesysModels[i].Action, gamesysModels[i].Data.Id_key, JsonSerializer.Deserialize<object[]>(gamesysModels[i].Data.Values.ToString()).Select(x => x.ToString()).Cast<object>().ToArray());
-						
-					}
-					else
-					{
-						((List<GamesysModel>)DatasPw.listPwData[0].DATA)[gamesysModels[i].Data.Id_tile]
-								.ActionValues((Actions)gamesysModels[i].Action, gamesysModels[i].Data.Id_key, gamesysModels[i].Data.Values) ;
-					}
+					((GamesysModel)((List<GamesysModel>)DatasPw.listPwData[0].DATA)[gamesysModels.Data.Id_tile])
+						.ActionValues((Actions)gamesysModels.Action, gamesysModels.Data.Id_key, ((JsonElement)gamesysModels.Data.Values).Return());
 
 				}
+				else
+				{
+					((List<GamesysModel>)DatasPw.listPwData[0].DATA)[gamesysModels.Data.Id_tile]
+							.ActionValues((Actions)gamesysModels.Action, gamesysModels.Data.Id_key, gamesysModels.Data.Values);
+				}
+
+
 				tempRes.Error = false;
 				tempRes.Message = "Sucesse";
 				tempRes.Data = null;
@@ -84,7 +82,7 @@ namespace PWIWEBAPI.Services.Glinkd
 				tempRes.Error = true;
 				tempRes.Message = ex.Message;
 				tempRes.Data = null;
-				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "SetGlinkd", "Exception", ex.Message);
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GlinkdService", "SetGlinkd", ex.Message);
 			}
 
 			return tempRes;

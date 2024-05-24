@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PWIWEBAPI.DataContext;
+using PWIWEBAPI.Logger;
 using PWIWEBAPI.Models;
 using System.Linq;
 
@@ -22,9 +23,50 @@ namespace PWIWEBAPI.Services.Gamed
 				tempRes.Data = null;
 				tempRes.Error = false;
 				tempRes.Message = ex.Message;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GamedService", "GetGmServer", ex.Message);
 			}
 			return tempRes;
 		}
+		public async Task<ActionResult<ServiceResModel<bool>>> WriteGmServer()
+		{
+			ServiceResModel<bool> tempRes = new ServiceResModel<bool>();
+			try
+			{
+				DatasPw.listPwData[2].Write();
+				tempRes.Error = false;
+				tempRes.Message = "Sucesse";
+			}
+			catch (Exception ex)
+			{
+
+				tempRes.Error = false;
+				tempRes.Message = ex.Message;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GamedService", "WriteGmServer", ex.Message);
+			}
+
+			return tempRes;
+		}
+		public async Task<ActionResult<ServiceResModel<bool>>> SetGmServer()
+		{
+			ServiceResModel<bool> tempRes = new ServiceResModel<bool>();
+			try
+			{
+				//DatasPw.listPwData[2].Write();
+				tempRes.Error = false;
+				tempRes.Message = "Sucesse";
+			}
+			catch (Exception ex)
+			{
+
+				tempRes.Error = false;
+				tempRes.Message = ex.Message;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GamedService", "SetGmServer", ex.Message);
+			}
+
+			return tempRes;
+		}
+
+
 
 		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetGsalia()
 		{
@@ -41,109 +83,87 @@ namespace PWIWEBAPI.Services.Gamed
 				tempRes.Data = null;
 				tempRes.Error = false;
 				tempRes.Message = ex.Message;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GamedService", "GetGsalia", ex.Message);
 			}
 			return tempRes;
 		}
-
-		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> WriteGmServer(List<GamesysModel> gamesysModels)
+		public async Task<ActionResult<ServiceResModel<bool>>> WriteGsalias()
 		{
-			ServiceResModel<List<GamesysModel>> tempRes = new ServiceResModel<List<GamesysModel>>();
+			ServiceResModel<bool> tempRes = new ServiceResModel<bool>();
 			try
 			{
-				//for (int i = 0; i < gamesysModels.Count; i++)
-				//{
-				//	for (int y = 0; y < DatasPw.DataGmServer.Count; y++)
-				//	{
-
-				//		if (DatasPw.DataGmServer[y].Title == gamesysModels[i].Title)
-				//		{
-				//			for (int x = 0; x < DatasPw.DataGmServer[y].Types.Count; x++)
-				//			{
-				//				for (int x1 = 0; x1 < gamesysModels[i].Types.Count; x1++)
-				//				{
-				//					if (DatasPw.DataGmServer[y].Types[x].Key == gamesysModels[i].Types[x1].Key)
-				//					{
-				//						DatasPw.DataGmServer[y].Types[x].Value = gamesysModels[i].Types[x1].Value;
-				//					}
-				//				}
-
-				//			}
-				//		}
-				//	}
-				//}
-
-				DatasPw.listPwData[2].Write();
-				tempRes.Error = false;
-				tempRes.Message = "Sucesse";
-				tempRes.Data = null;
-			}
-			catch (Exception ex)
-			{
-
-				tempRes.Error = false;
-				tempRes.Message = ex.Message;
-				tempRes.Data = null;
-			}
-
-			return tempRes;
-		}
-
-		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> WriteGsalias(ActionData<List<GamesysModel>> gamesysModels)
-		{
-			ServiceResModel<List<GamesysModel>> tempRes = new ServiceResModel<List<GamesysModel>>();
-			try
-			{
-				//for (int i = 0; i < gamesysModels.Data.Count; i++)
-				//{
-				//	for (int y = 0; y < DatasPw.DataGsalia.Count; y++)
-				//	{
-
-				//		if (DatasPw.DataGsalia[y].Title == gamesysModels.Data[i].Title)
-				//		{
-				//			for (int x = 0; x < DatasPw.DataGsalia[y].Types.Count; x++)
-				//			{
-				//				for (int x1 = 0; x1 < gamesysModels.Data[i].Types.Count; x1++)
-				//				{
-				//					if (DatasPw.DataGsalia[y].Types[x].Key == gamesysModels.Data[i].Types[x1].Key)
-				//					{
-				//						switch (gamesysModels.Action)
-				//						{
-				//							case Actions.INSERT:
-				//								if (DatasPw.DataGsalia[y].Types[x].Value.GetType() == typeof(string[]))
-				//								{
-				//									DatasPw.DataGsalia[y].Types[x].Value = ((string[])DatasPw.DataGsalia[y].Types[x].Value).addItensArray(string.Join(";", gamesysModels.Data[i].Types[x1].Value));
-				//								}												
-				//								break;
-				//							case Actions.UPDATE:
-				//								break;
-				//							case Actions.DELETE:
-				//								DatasPw.DataGsalia[y].Types[x].Value= ((string[])DatasPw.DataGsalia[y].Types[x].Value).removeItensArray(string.Join(";", gamesysModels.Data[i].Types[x1].Value));
-				//								break;
-				//							default:
-				//								break;
-				//						}									
-
-				//					}
-				//				}
-				//				DatasPw.DataGsalia[y].OnInit();
-				//			}
-				//		}
-				//	}
-				//}3
+				
 
 				DatasPw.listPwData[3].Write();
 				tempRes.Error = false;
 				tempRes.Message = "Sucesse";
-				tempRes.Data = null;
 			}
 			catch (Exception ex)
 			{
 
 				tempRes.Error = true;
-				tempRes.Message = ex.Message;
-				tempRes.Data = null;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GamedService", "WriteGsalias", ex.Message);
 			}
 
+			return tempRes;
+		}
+		public async Task<ActionResult<ServiceResModel<bool>>> SetGsalias()
+		{
+			ServiceResModel<bool> tempRes = new ServiceResModel<bool>();
+			try
+			{
+				//DatasPw.listPwData[3].Write();
+				tempRes.Error = false;
+				tempRes.Message = "Sucesse";
+			}
+			catch (Exception ex)
+			{
+
+				tempRes.Error = false;
+				tempRes.Message = ex.Message;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GamedService", "SetGsalias", ex.Message);
+			}
+
+			return tempRes;
+		}
+
+		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetGs()
+		{
+			ServiceResModel<List<GamesysModel>> tempRes = new ServiceResModel<List<GamesysModel>>();
+			try
+			{
+				tempRes.Data = (List<GamesysModel>?)DatasPw.listPwData[5].DATA;
+
+				tempRes.Error = false;
+				tempRes.Message = "Sucess";
+			}
+			catch (Exception ex)
+			{
+				tempRes.Data = null;
+				tempRes.Error = false;
+				tempRes.Message = ex.Message;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GamedService", "GetGs", ex.Message);
+			}
+			return tempRes;
+		}
+
+		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetPtemplate()
+		{
+			ServiceResModel<List<GamesysModel>> tempRes = new ServiceResModel<List<GamesysModel>>();
+			try
+			{
+				tempRes.Data = (List<GamesysModel>?)DatasPw.listPwData[6].DATA;
+
+				tempRes.Error = false;
+				tempRes.Message = "Sucess";
+			}
+			catch (Exception ex)
+			{
+				tempRes.Data = null;
+				tempRes.Error = false;
+				tempRes.Message = ex.Message;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GamedService", "GetPtemplate", ex.Message);
+			}
 			return tempRes;
 		}
 	}

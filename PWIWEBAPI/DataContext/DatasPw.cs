@@ -20,9 +20,16 @@ namespace PWIWEBAPI.DataContext
 		public static string gamedGmServerFile = @"C:\xampp\htdocs\PWSERVER\gamed\gmserver.conf";
 		private static string gamedGsaliasFile = @"C:\xampp\htdocs\PWSERVER\gamed\gsalias.conf";
 
+		private static string gamedGs = @"C:\xampp\htdocs\PWSERVER\gamed\gs.conf";
+		private static string gamedPtemplate = @"C:\xampp\htdocs\PWSERVER\gamed\ptemplate.conf";
+
 
 		public static void StartAll()
 		{
+			Console.WriteLine(Directory.GetCurrentDirectory());
+			Console.WriteLine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName);
+
+
 			SetLPD();
 		}
 		public static void SetLPD()
@@ -33,6 +40,8 @@ namespace PWIWEBAPI.DataContext
 			listPwData.Add(new ListPwData { DATA = new List<GamesysModel>(), FILE = gamedGmServerFile });
 			listPwData.Add(new ListPwData { DATA = new List<GamesysModel>(), FILE = gamedGsaliasFile });
 			listPwData.Add(new ListPwData { DATA = new List<ListModel>(), FILE = gfactiondFilterFile });
+			listPwData.Add(new ListPwData { DATA = new List<GamesysModel>(), FILE = gamedGs });
+			listPwData.Add(new ListPwData { DATA = new List<GamesysModel>(), FILE = gamedPtemplate });
 
 			for (int i = 0; i < listPwData.Count; i++)
 			{
@@ -60,19 +69,23 @@ namespace PWIWEBAPI.DataContext
 						int xt = -1;
 						while (!sr.EndOfStream)
 						{
-							string line = sr.ReadLine().Trim().Replace("\t", "").Replace(" ", "");
+							string line = sr.ReadLine().Replace("\t", "");
 
+							if (line.Trim() == "[DoubleExp]")
+							{
+
+							}
 							if (!line.StartsWith("#") && !line.StartsWith(";"))
 							{
-								if (line.StartsWith("["))
+								if (line.Trim().StartsWith("[") && line.Trim().EndsWith("]"))
 								{
 									it++;
-									gamesysModels.Add(new GamesysModel { Title = line.Substring(1).Replace("]", ""), TitleIndex = it });
+									gamesysModels.Add(new GamesysModel { Title = line.Trim().Replace(" ", null).Substring(1, line.Trim().Replace(" ", null).Length - 2), TitleIndex = it });
 									xt = 0;
 								}
 								else
 								{
-									if (line != "")
+									if (!string.IsNullOrWhiteSpace(line))
 									{
 										string[] temps = line.Trim().Split('=');
 
@@ -83,11 +96,28 @@ namespace PWIWEBAPI.DataContext
 
 										object tempValue = null;
 
+										if (gamesysModels[it].Title == "DoubleExp" || gamesysModels[it].Title == "MESMD_ADJUST")
+										{
+											object ob = null;
 
-										if (temps[1].ToString().StartsWith("{"))
+											if (temps[1].Trim().Contains(";"))
+											{
+												object[] tempOb = temps[1].Trim().Split(";").Where(x => x != "").Cast<object>().ToArray();
+												ob = tempOb[0].ToString().Trim().Split(" ").Where(x => x != "").Cast<object>().ToArray();
+												ob = Extencions.addItemArray((object[])ob, ";" + tempOb[1]);
+											}
+											else
+											{
+												ob = temps[1].Trim().Split(" ").Where(x => x != "").Cast<object>().ToArray();
+											}
+
+											tempValue = new InterString { JoinString = " ", Value = Extencions.RemoveNullString(ob) };
+										}
+										else if (temps[1].ToString().Trim().StartsWith("{"))
 										{
 											string xr = temps[1].ToString().Trim();
-											string ins = "\t"; 
+
+											string ins = "\t";
 
 											if (xr.Contains("},{"))
 											{
@@ -97,13 +127,13 @@ namespace PWIWEBAPI.DataContext
 
 											var ry = xr.Replace("{", "").Split("}").Cast<object>().ToArray();
 
-											ry = ry.Where(x => (x != ",")&&(x != "")).Cast<object>().ToArray();
+											ry = ry.Where(x => (x != ",") && (x != "")).Cast<object>().ToArray();
 
 
-											tempValue = new InterString { StartString = "{", JoinString = ins, EndString = "}", Value = ry};
-											
+											tempValue = new InterString { StartString = "{", JoinString = ins, EndString = "}", Value = Extencions.RemoveNullString(ry) };
+
 										}
-										else if (temps[1].ToString().StartsWith("("))
+										else if (temps[1].ToString().Trim().StartsWith("("))
 										{
 											string xr = temps[1].ToString().Trim();
 											string ins = "\t";
@@ -119,25 +149,25 @@ namespace PWIWEBAPI.DataContext
 											ry = ry.Where(x => (x != ",") && (x != "")).Cast<object>().ToArray();
 
 
-											tempValue = new InterString { StartString = "(", JoinString = ins, EndString = ")", Value = ry };
+											tempValue = new InterString { StartString = "(", JoinString = ins, EndString = ")", Value = Extencions.RemoveNullString(ry) };
 										}
-										else if (temps[1].Contains(";") && (!temps[1].Contains("(") && !temps[1].Contains("{")))
+										else if (temps[1].Contains(";"))
 										{
-											object ob = temps[1].Replace(" ", null).Split(";").Where(x => x != "").Cast<object>().ToArray();
-											tempValue = new InterString {JoinString = ";" , Value = ob };
+											object ob = temps[1].Trim().Split(";").Where(x => x != "").Cast<object>().ToArray();
+											tempValue = new InterString { JoinString = ";", Value = Extencions.RemoveNullString(ob) };
 										}
-										else if (temps[1].Contains(",") && (!temps[1].Contains("(") && !temps[1].Contains("{")))
+										else if (temps[1].Contains(","))
 										{
-											object ob = temps[1].Replace(" ", null).Split(",").Where(x => x != "").Cast<object>().ToArray();
-											tempValue = new InterString { JoinString = ",", Value = ob };
+											object ob = temps[1].Trim().Split(",").Where(x => x != "").Cast<object>().ToArray();
+											tempValue = new InterString { JoinString = ",", Value = Extencions.RemoveNullString(ob) };
 										}
 										else
 										{
-											tempValue = new InterString { Value = (object)temps[1] } ;
+											tempValue = new InterString { Value = (object)temps[1] };
 										}
 
 
-										gamesysModels[it].Types.Add(new Types { Key = temps[0], KeyIndex = xt, Value = tempValue });
+										gamesysModels[it].Types.Add(new Types { Key = temps[0].Trim().Replace(" ", null), KeyIndex = xt, Value = Extencions.SetComma((InterString)tempValue) });
 										xt++;
 										gamesysModels[it].OnInit();
 
@@ -175,7 +205,8 @@ namespace PWIWEBAPI.DataContext
 			if (file != "" && !typesSet)
 			{
 				string _NAME = file.Split("\\")[file.Split("\\").Length - 2].ToUpper();
-				string _FILE = file.Split("\\")[file.Split("\\").Length - 1].Replace((new FileInfo(file)).Extension, null).ToUpper();
+				string _FILE = file.Split("\\")[file.Split("\\").Length - 1];
+				_FILE = (new FileInfo(_FILE)).Extension != null ? _FILE.ToUpper() : _FILE.Replace((new FileInfo(file)).Extension, null).ToUpper();
 
 				try
 				{
@@ -193,20 +224,21 @@ namespace PWIWEBAPI.DataContext
 								if (((InterString)tp.Value).Value.GetType() == typeof(object[]))
 								{
 									var xs = (object[])((InterString)tp.Value).Value;
+									object[] interTemp = new object[xs.Length];
 
-                                    for (int j = 0; j < xs.Length; j++)
-                                    {
-										tempwriter = $"{((InterString)tp.Value).StartString}{xs[j]}{((InterString)tp.Value).EndString}";
+									for (int j = 0; j < xs.Length; j++)
+									{
+										interTemp[j] = $"{((InterString)tp.Value).StartString}{Extencions.GetComma(xs[j])}{((InterString)tp.Value).EndString}";
 
 									}
-                                    var tpValue = string.Join(((InterString)tp.Value).JoinString, xs) ;
+									var tpValue = string.Join(((InterString)tp.Value).JoinString, interTemp);
 
 									tempwriter += ($"{Extencions.PadRight(tp.Key, tp.Key.Length > 25 ? tp.Key.Length : 25)}=\t\t\t{tpValue}\n");
 								}
 								else
 								{
 									var xtx = (InterString)tp.Value;
-									tempwriter += ($"{Extencions.PadRight(tp.Key, tp.Key.Length > 25 ? tp.Key.Length : 25)}=\t\t\t{xtx.Value}\n");
+									tempwriter += ($"{Extencions.PadRight(tp.Key, tp.Key.Length > 25 ? tp.Key.Length : 25)}=\t\t\t{xtx.Value+xtx.EndString}\n");
 								}
 							}
 						}
@@ -277,7 +309,8 @@ namespace PWIWEBAPI.DataContext
 			if (file != "")
 			{
 				string _NAME = file.Split("\\")[file.Split("\\").Length - 2].ToUpper();
-				string _FILE = file.Split("\\")[file.Split("\\").Length - 1].Replace((new FileInfo(file)).Extension, null).ToUpper();
+				string _FILE = file.Split("\\")[file.Split("\\").Length - 1];
+				_FILE = (new FileInfo(_FILE)).Extension != null ? _FILE.ToUpper() : _FILE.Replace((new FileInfo(file)).Extension, null).ToUpper();
 
 				try
 				{
@@ -288,7 +321,7 @@ namespace PWIWEBAPI.DataContext
 
 						for (int i = 0; i < listModels.Count; i++)
 						{
-							tempFile+=($"{listModels[i]}\n");
+							tempFile += ($"{listModels[i].Value}\n");
 						}
 
 						using (StreamWriter writer = new StreamWriter(file, false))

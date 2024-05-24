@@ -13,22 +13,28 @@ namespace PWIWEBAPI.Controllers
 		public GamedController(IGamed gamed)=> _gamed = gamed;
 
 
-		[HttpGet("GmServer")]
+		[HttpGet("gmserver")]
 		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetGamed() => await _gamed.GetGmServer();
 
 		[HttpGet("Gsalia")]
 		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetGsalia() => await _gamed.GetGsalia();
+		[HttpGet("gs")]
+		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetGs() => await _gamed.GetGs();
+		[HttpGet("ptemplate")]
+		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetPtemplate() => await _gamed.GetPtemplate();
 
-		[HttpPost("GmServer")]
-		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> WriteGamed(List<GamesysModel> gamesysModels)
+
+
+		[HttpPost("gmServer")]
+		public async Task<ActionResult<ServiceResModel<bool>>> WriteGamed()
 		{
-			return await _gamed.WriteGmServer(gamesysModels);
+			return await _gamed.WriteGmServer();
 		}
 
-		[HttpPost("Gsalias")]
-		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> WriteGsalias(ActionData<List<GamesysModel>> gamesysModels)
+		[HttpPost("gsalias")]
+		public async Task<ActionResult<ServiceResModel<bool>>> WriteGsalias()
 		{
-			return await _gamed.WriteGsalias(gamesysModels);
+			return await _gamed.WriteGsalias();
 		}
 	}
 }

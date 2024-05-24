@@ -1,0 +1,20 @@
+[Unit]
+Description=API .NET
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/dotnet /caminho/para/sua/api/SuaApi.dll
+Restart=always
+RestartSec=10
+SyslogIdentifier=dotnet-api
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+WorkingDirectory=/caminho/para/sua/api
+
+[Install]
+WantedBy=multi-user.target
+
+
+sudo systemctl daemon-reload
+sudo systemctl start sua-api
+sudo systemctl enable sua-api
