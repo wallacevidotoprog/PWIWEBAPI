@@ -117,7 +117,7 @@ namespace PWIWEBAPI
 			}
 			else
 			{
-				obj = ((object[])obj).ToString().Trim().Replace(" ", null);
+				obj = ((object)obj).ToString().Trim().Replace(" ", null);
 			}
 
 			return obj;

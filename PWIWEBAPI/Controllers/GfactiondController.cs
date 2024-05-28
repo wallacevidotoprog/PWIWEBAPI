@@ -20,27 +20,27 @@ namespace PWIWEBAPI.Controllers
 
 		}
 		#region GET
-		[HttpGet]
+		[HttpGet("GetAllGfactiond")]
 		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetGfactiond()=> await _gfactiond.GetGfactiond();
 
-		[HttpGet("filters")]
+		[HttpGet("GetAllFilters")]
 		public async Task<ActionResult<ServiceResModel<List<ListModel>>>> GetGfactiondFilter() => await _gfactiond.GetGfactiondFilter();
 		#endregion
 
 
 		#region POST
-		[HttpPost]
+		[HttpPost("WriteGfactiond")]
 		public async Task<ActionResult<ServiceResModel<bool>>> WriteGfactiond()=> await _gfactiond.WriteGfactiond();
 		
-		[HttpPost("filters")]
+		[HttpPost("WriteFilters")]
 		public async Task<ActionResult<ServiceResModel<bool>>> WriteGfactiondFilter() => await _gfactiond.WriteGfactiondFilter();
 		#endregion
 
 
 		#region PUT
-		[HttpPut]
+		[HttpPut("SetGfactiond")]
 		public async Task<ActionResult<ServiceResModel<bool>>> SetGfactiond(ActionData<DataMod> gamesysModels) => await _gfactiond.SetGfactiond(gamesysModels);
-		[HttpPut("filters")]
+		[HttpPut("SetFilters")]
 		public async Task<ActionResult<ServiceResModel<bool>>> SetGfactiondFilter(ActionData<List<ListModel>> filter) => await _gfactiond.SetGfactiondFilter(filter);
 		#endregion
 

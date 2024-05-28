@@ -1,5 +1,6 @@
 ﻿using PWIWEBAPI.Logger;
 using PWIWEBAPI.Models;
+using PWIWEBAPI.sElement;
 using PWIWEBAPI.Services.Glinkd;
 using System.Diagnostics.SymbolStore;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace PWIWEBAPI.DataContext
 	public static class DatasPw
 	{
 		public static List<ListPwData>? listPwData;
-
+		public static eListCollection eList;
+		#region CONF
 		public static string glinkdFile = @"C:\xampp\htdocs\PWSERVER\glinkd\gamesys.conf";
 		public static string gfactiondFile = @"C:\xampp\htdocs\PWSERVER\gfactiond\gamesys.conf";
 		public static string gfactiondFilterFile = @"C:\xampp\htdocs\PWSERVER\gfactiond\filters";
@@ -22,6 +24,7 @@ namespace PWIWEBAPI.DataContext
 
 		private static string gamedGs = @"C:\xampp\htdocs\PWSERVER\gamed\gs.conf";
 		private static string gamedPtemplate = @"C:\xampp\htdocs\PWSERVER\gamed\ptemplate.conf";
+		#endregion
 
 
 		public static void StartAll()
@@ -31,6 +34,7 @@ namespace PWIWEBAPI.DataContext
 
 
 			SetLPD();
+			eList = new eListCollection(@"C:\xampp\htdocs\PWSERVER\gamed\config\elements.data");
 		}
 		public static void SetLPD()
 		{
@@ -163,7 +167,7 @@ namespace PWIWEBAPI.DataContext
 										}
 										else
 										{
-											tempValue = new InterString { Value = (object)temps[1] };
+											tempValue = new InterString { Value = Extencions.RemoveNullString((object)temps[1]) };
 										}
 
 

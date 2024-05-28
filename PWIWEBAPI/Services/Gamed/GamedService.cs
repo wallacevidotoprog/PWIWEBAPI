@@ -146,6 +146,26 @@ namespace PWIWEBAPI.Services.Gamed
 			}
 			return tempRes;
 		}
+		public async Task<ActionResult<ServiceResModel<bool>>> WriteGs()
+		{
+			ServiceResModel<bool> tempRes = new ServiceResModel<bool>();
+			try
+			{
+
+
+				DatasPw.listPwData[5].Write();
+				tempRes.Error = false;
+				tempRes.Message = "Sucesse";
+			}
+			catch (Exception ex)
+			{
+
+				tempRes.Error = true;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GamedService", "WriteGs", ex.Message);
+			}
+
+			return tempRes;
+		}
 
 		public async Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetPtemplate()
 		{
@@ -164,6 +184,26 @@ namespace PWIWEBAPI.Services.Gamed
 				tempRes.Message = ex.Message;
 				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GamedService", "GetPtemplate", ex.Message);
 			}
+			return tempRes;
+		}
+		public async Task<ActionResult<ServiceResModel<bool>>> WritePtemplate()
+		{
+			ServiceResModel<bool> tempRes = new ServiceResModel<bool>();
+			try
+			{
+
+
+				DatasPw.listPwData[6].Write();
+				tempRes.Error = false;
+				tempRes.Message = "Sucesse";
+			}
+			catch (Exception ex)
+			{
+
+				tempRes.Error = true;
+				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "GamedService", "WritePtemplate", ex.Message);
+			}
+
 			return tempRes;
 		}
 	}

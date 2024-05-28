@@ -1,5 +1,7 @@
-﻿using System.Text;
+﻿using PWIWEBAPI.Models;
+using System.Text;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PWIWEBAPI.Logger
 {
@@ -42,9 +44,32 @@ namespace PWIWEBAPI.Logger
 
 			if (msgErr != null)
 			{
-				msg += $"-\t\t{msgErr}";		
+				msg += $"-\t\t{msgErr}";
 			}
 			LogWrite(msg);
+		}
+
+		public static async Task<List<string[]>> LogGet()
+		{
+			List<string[]> tempLog = null;
+			if (File.Exists(fileLog))
+			{
+				tempLog = new List<string[]>();
+				using (StreamReader sr = new StreamReader(fileLog))
+				{
+					while (!sr.EndOfStream)
+					{
+						string temp = sr.ReadLine();
+						if (temp != "" && temp != null)
+						{
+							tempLog.Add(temp.Split('-').Select(x => x.Trim().Replace("\t", null)).ToArray());
+						}
+					}
+					sr.Close();
+				}
+			}
+
+			return tempLog;
 		}
 	}
 	public enum TypeLog

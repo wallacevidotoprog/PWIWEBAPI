@@ -15,7 +15,9 @@ namespace PWIWEBAPI.Services.Gamed
 		Task<ActionResult<ServiceResModel<bool>>> SetGsalias();
 
 		Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetGs();
+		Task<ActionResult<ServiceResModel<bool>>> WriteGs();
 
 		Task<ActionResult<ServiceResModel<List<GamesysModel>>>> GetPtemplate();
+		Task<ActionResult<ServiceResModel<bool>>> WritePtemplate();
 	}
 }
