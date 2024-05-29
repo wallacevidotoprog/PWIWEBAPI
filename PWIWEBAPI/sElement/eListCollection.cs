@@ -1,6 +1,7 @@
 ﻿using PWIWEBAPI.Logger;
 using System.Collections;
 using System.Text;
+using System.Xml.Linq;
 
 namespace PWIWEBAPI.sElement
 {
@@ -247,6 +248,11 @@ namespace PWIWEBAPI.sElement
 		// only works for PW !!!
 		public eList[] Load(string elFile)
 		{
+			string _NAME = elFile.Split("\\")[elFile.Split("\\").Length - 2].ToUpper();
+			string _FILE = elFile.Split("\\")[elFile.Split("\\").Length - 1];
+			_FILE = (new FileInfo(_FILE)).Extension != null ? _FILE.ToUpper() : _FILE.Replace((new FileInfo(elFile)).Extension, null).ToUpper();
+			Loggers.LogWriteLog(TypeLog.INFO, TypeActionLog.READ, TypePostionLog.INIT, _NAME, _FILE);
+
 			eList[] Li = new eList[0];
 			addonIndex = new Dictionary<int, int>();
 
@@ -493,7 +499,7 @@ namespace PWIWEBAPI.sElement
 
 			br.Close();
 			fs.Close();
-
+			Loggers.LogWriteLog(TypeLog.INFO, TypeActionLog.READ, TypePostionLog.FINISH, _NAME, _FILE);
 			return Li;
 		}
 
