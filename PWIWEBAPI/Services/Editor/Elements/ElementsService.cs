@@ -93,24 +93,6 @@ namespace PWIWEBAPI.Services.Editor.Elements
 			return null;
 		}
 
-		public async Task<ActionResult<ServiceResModel<bool>>> NewItem(int selectedIndex)
-		{
-			try
-			{
-
-
-
-				return new ServiceResModel<bool> { Error = false, Message = null };
-
-			}
-			catch (Exception ex)
-			{
-				Loggers.LogWriteLog(TypeLog.WARNING, TypeActionLog.EXECUTE, TypePostionLog.ERROR, "ElementsService", "DupeItem", ex.Message);
-				return new ServiceResModel<bool> { Error = true, Message = ex.Message };
-			}
-			return null;
-		}
-
 		public async Task<ActionResult<ServiceResModel<bool>>> DupeItem(int selectedIndex, int selectedElement)
 		{
 			try

@@ -23,8 +23,6 @@ namespace PWIWEBAPI.Controllers
 
 		[HttpPost("SetValue")]
 		public async Task<ActionResult<ServiceResModel<bool>>> SetValue(int selectedIndex, int selectedElement, int selectedField, string value)=> await _elements.SetValue(selectedIndex, selectedElement, selectedField, value);
-		[HttpPost("NewItem")]
-		public async Task<ActionResult<ServiceResModel<bool>>> NewItem(int selectedIndex)=> await _elements.NewItem(selectedIndex);
 
 		[HttpPost("DupeItem")]
 		public async Task<ActionResult<ServiceResModel<bool>>> DupeItem(int selectedIndex, int selectedElement) => await _elements.DupeItem(selectedIndex, selectedElement);
